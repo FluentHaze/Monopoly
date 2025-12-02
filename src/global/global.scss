@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background: #111;
+}
+
+body {
+  font-family: -apple-system,
+  BlinkMacSystemFont,
+  'Helvetica Neue',
+  Helvetica,
+  Segoe UI,
+  Arial,
+  Roboto,
+  'PingFang SC',
+  'miui',
+  'Hiragino Sans GB',
+  'Microsoft Yahei',
+  sans-serif;
+
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Likely future */
+  overscroll-behavior-y: none;
+}

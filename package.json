@@ -1,0 +1,31 @@
+{
+  "name": "agreement",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "rimraf dist.zip && vue-tsc -b && vite build && node zip-dist.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@esotericsoftware/spine-player": "^4.2.95",
+    "pinia": "^3.0.4",
+    "postcss-pxtorem": "^6.1.0",
+    "vant": "^4.9.21",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.4",
+    "@types/postcss-pxtorem": "^6.1.0",
+    "@vitejs/plugin-vue": "^6.0.0",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.6",
+    "sass-embedded": "^1.89.2",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.0",
+    "vue-tsc": "^2.2.10"
+  }
+}

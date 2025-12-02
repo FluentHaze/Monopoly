@@ -1,0 +1,85 @@
+@use 'sass:map';
+
+$boxWidth: 62px; // 盒子宽度
+$boxHeight: 50px; // 盒子高度
+$leftOffset: calc((($boxWidth * 7) - 355px) / 6);
+$topOffset: 30px;
+$topOffset1: calc($boxHeight - 2.5px);
+$box-properties: (
+  31: (
+    leftMultiplier: 1,
+    topMultiplier: 3,
+    topOffset: 5px,
+  ),
+  32: (
+    leftMultiplier: 2,
+    topMultiplier: 3,
+    topOffset: -25px,
+  ),
+  33: (
+    leftMultiplier: 3,
+    topMultiplier: 3,
+    topOffset: 5px,
+  ),
+  34: (
+    leftMultiplier: 3,
+    topMultiplier: 4,
+    topOffset: 5px,
+  ),
+  35: (
+    leftMultiplier: 3,
+    topMultiplier: 5,
+    topOffset: 5px,
+  ),
+  36: (
+    leftMultiplier: 4,
+    topMultiplier: 6,
+    topOffset: -10px,
+  ),
+  37: (
+    leftMultiplier: 5,
+    topMultiplier: 5,
+    topOffset: 5px,
+  ),
+);
+
+// 最上面7个格子
+@for $i from 1 through 7 {
+  .box:nth-child(#{$i}) {
+    top: if($i % 2 == 0, 0, $topOffset);
+    left: calc(($boxWidth - $leftOffset) * ($i - 1));
+  }
+}
+// 右边8个格子
+@for $i from 8 through 15 {
+  .box:nth-child(#{$i}) {
+    top: calc($topOffset + $topOffset1 * ($i - 7));
+    left: calc(($boxWidth - $leftOffset) * 6);
+  }
+}
+// 底部7个格子
+@for $i from 16 through 22 {
+  .box:nth-child(#{$i}) {
+    $top1: calc($topOffset + $topOffset1 * 9);
+    $top2: calc($topOffset + $topOffset1 * 9 + $topOffset);
+    top: if($i % 2 == 0, $top1, $top2);
+    left: calc(($boxWidth - $leftOffset) * (22 - $i));
+  }
+}
+// 左侧8个格子
+@for $i from 23 through 30 {
+  .box:nth-child(#{$i}) {
+    top: calc($topOffset + $topOffset1 * (31 - $i));
+    left: 0;
+  }
+}
+// 中间无规律格子
+@for $i from 31 through 37 {
+  .box:nth-child(#{$i}) {
+    $offset: map.get(map.get($box-properties, $i), 'topOffset');
+    left: calc(
+      ($boxWidth - $leftOffset) * #{map.get(map.get($box-properties, $i), 'leftMultiplier')}
+    );
+    top: calc(($topOffset1 * #{map.get(map.get($box-properties, $i), 'topMultiplier')}) + $offset);
+  }
+}
