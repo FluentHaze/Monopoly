@@ -11,6 +11,7 @@
 - [界面预览](#界面预览)
 - [快速开始](#快速开始)
 - [命令与构建](#命令与构建)
+- [GitHub Pages 自动部署](#github-pages-自动部署)
 - [玩法规则](#玩法规则)
 - [修改地图配置](#修改地图配置)
 - [代码结构与职责](#代码结构与职责)
@@ -108,6 +109,33 @@ dist.zip    dist 目录内容的压缩包
 `dist.zip` 解压后直接得到站点文件。构建目录、压缩包及测试临时输出均已加入 `.gitignore`。
 
 项目使用 Hash 路由，入口为 `/#/`。部署到子路径时，需要设置 `vite.config.ts` 中的 `base`，并确认 `spine/dice/` 下的动画资源能够访问。预览与部署应通过 HTTP 服务访问。
+
+## GitHub Pages 自动部署
+
+在线地址：**https://fluenthaze.github.io/Monopoly/**
+
+仓库使用 [.github/workflows/pages.yml](.github/workflows/pages.yml) 自动部署：
+
+1. 将本地提交推送到 `main` 分支。
+2. GitHub Actions 使用 Node.js 24 安装依赖、运行规则测试并进行类型检查与构建。
+3. 成功后上传 `dist/` 并发布至 Pages；构建或测试失败不会发布新的页面。
+
+```bash
+git push origin main
+```
+
+**本地 `git commit` 不会触发线上更新，需要推送到 GitHub。** 也可以在仓库 Actions 中选择 **Deploy to GitHub Pages → Run workflow** 手动发布。
+
+Pages 的发布来源为 **GitHub Actions**。工作流通过 `VITE_BASE_PATH` 自动设置仓库子路径，本地开发仍默认使用 `/`，无需手动修改配置或提交 `dist/`。
+
+如需本地检查与 Pages 相同的构建路径：
+
+```bash
+VITE_BASE_PATH=/Monopoly/ npm run build
+npm run preview
+```
+
+访问预览服务的 `/Monopoly/` 路径，检查图片、静态文件和 Spine 动画。
 
 ## 玩法规则
 

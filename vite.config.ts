@@ -6,6 +6,7 @@ import autoprefixer from 'autoprefixer';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  base: process.env.VITE_BASE_PATH || '/',
   css: {
     postcss: {
       plugins: [
