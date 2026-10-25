@@ -132,7 +132,7 @@ Pages 的发布来源为 **GitHub Actions**。工作流通过 `VITE_BASE_PATH` �
 
 ```bash
 VITE_BASE_PATH=/Monopoly/ npm run build
-npm run preview
+VITE_BASE_PATH=/Monopoly/ npm run preview
 ```
 
 访问预览服务的 `/Monopoly/` 路径，检查图片、静态文件和 Spine 动画。
