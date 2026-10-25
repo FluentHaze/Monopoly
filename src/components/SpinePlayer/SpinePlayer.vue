@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import type { SpinePlayerConfig } from '@esotericsoftware/spine-player';
 import { SpinePlayer } from '@esotericsoftware/spine-player';
 
@@ -26,7 +26,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['success', 'complete']);
+const emit = defineEmits(['success', 'complete', 'error']);
 const spineContainer = ref<HTMLElement | null>(null);
 let player: SpinePlayer | null = null;
 
@@ -69,6 +69,7 @@ onMounted(() => {
     },
     // 加载错误回调函数
     error(reason) {
+      emit('error', reason);
       console.error('spine animation load error', reason);
       // 提供更详细的错误信息，帮助诊断问题
       if (reason.toString().includes('license')) {
@@ -84,6 +85,7 @@ onMounted(() => {
     // 创建spine播放器
     player = new SpinePlayer(spineContainer.value, config);
   } catch (error: unknown) {
+    emit('error', error);
     console.error('Failed to create SpinePlayer:', error);
     // 检查是否与许可证相关
     const errorMessage = String(error);
@@ -102,11 +104,6 @@ onMounted(() => {
       console.log('Current rawDataURIs:', props.rawDataURIs);
     }
   }
-
-  // 清理函数，当组件卸载时销毁 player
-  return () => {
-    player?.dispose();
-  };
 });
 const destroy = () => {
   player?.dispose();
@@ -115,8 +112,6 @@ const destroy = () => {
 };
 
 onBeforeUnmount(destroy);
-
-onUnmounted(destroy);
 
 /**
  * 播放指定动画

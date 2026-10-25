@@ -8,7 +8,6 @@
 <script setup lang="ts">
 import { shallowRef, onBeforeUnmount, watch } from 'vue';
 
-
 const props = defineProps<{ countdown: number }>();
 
 const timerId = shallowRef<number>();
@@ -22,8 +21,7 @@ const updateDisplay = () => {
 const formateTime = (time: any) => {
   if (time <= 0) {
     return '00:00:00';
-  }
-  else {
+  } else {
     const day = Math.floor(time / (1000 * 60 * 60 * 24));
     const hour = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minute = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
@@ -45,9 +43,9 @@ watch(
   () => props.countdown,
   newVal => {
     clearCountdownTimer();
+    remainingTime.value = Math.max(0, newVal);
+    updateDisplay();
     if (newVal > 0) {
-      remainingTime.value = newVal;
-      updateDisplay();
       timerId.value = window.setInterval(() => {
         remainingTime.value--;
         updateDisplay();

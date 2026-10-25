@@ -1,219 +1,175 @@
 <template>
-  <div class="reward">
-    <div class="reward-title">Recompensas de volta</div>
-    <div class="reward-list">
-      <div class="boxs">
-        <div v-for="(item, index) in boxList" :key="index">
-          <div class="item" @click="toggleToolTip(item)">
-            <img class="light" src="@/assets/img/monopoly/light.png" alt="" />
-            <img class="gift" src="@/assets/img/monopoly/reward_box1.png" alt="" />
-            <img class="receive" src="@/assets/img/monopoly/receive.png" alt="" />
-          </div>
-        </div>
-      </div>
-      <div class="line">
-        <div class="dots" :style="{ '--progress-value': props.complete }">
-          <div class="dot" v-for="(_, index) in props.list" :key="index" :style="dotStyle(index)">
-            {{ index + 1 }}
-          </div>
-        </div>
-      </div>
+  <section class="milestones" aria-label="圈数奖励">
+    <div class="reward-heading">
+      <h2><GameIcon name="chest-jade" />圈数奖励</h2>
+      <span>{{ Math.min(complete, 5) }} / 5</span>
     </div>
-  </div>
+    <p class="reward-caption">完成整圈探索，领取你的冒险宝藏</p>
+    <div class="chests">
+      <button
+        v-for="lap in 5"
+        :key="lap"
+        :disabled="complete < lap || claimed.includes(lap)"
+        :aria-label="`第 ${lap} 圈宝箱${claimed.includes(lap) ? '已领取' : complete < lap ? '未解锁' : '可领取'}`"
+        @click="$emit('claim', lap)"
+      >
+        <GameIcon
+          :name="lap >= 4 ? 'chest-jade' : 'chest-wood'"
+          :class="{ available: complete >= lap && !claimed.includes(lap) }"
+        />
+        <span class="milestone-dot" :class="{ reached: complete >= lap }"></span
+        ><span>{{ lap }} 圈</span
+        ><small>{{
+          claimed.includes(lap)
+            ? '已领取'
+            : complete >= lap
+              ? '领取'
+              : `${MILESTONE_REWARDS[lap - 1]} 金币`
+        }}</small>
+      </button>
+    </div>
+  </section>
 </template>
-
 <script setup lang="ts">
-import { reactive, watch, computed } from 'vue'
-interface Props {
-  list: { showPopover: boolean; id: number }[];
-  complete: number;
-}
-
-const props = defineProps<Props>();
-let boxList = reactive<Props['list'][number][]>([]);
-
-watch(
-  () => props.list,
-  () => {
-    boxList = props.list;
-  },
-  { immediate: true },
-);
-
-const dotStyle = computed(() => (index: number) => {
-  return {
-    background: index + 1 <= props.complete ? `#fce403` : '#000000',
-    color: index + 1 <= props.complete ? `#674000` : '#BCBCBC',
-  };
-});
-
-const toggleToolTip = (item: Props['list'][number]) => {
-  boxList.forEach(e => {
-    if (e.id === item.id) {
-      e.showPopover = !e.showPopover;
-    } else {
-      e.showPopover = false;
-    }
-  });
-};
+import GameIcon from './GameIcon.vue';
+import { MILESTONE_REWARDS } from '../game';
+defineProps<{ complete: number; claimed: number[] }>();
+defineEmits<{ claim: [lap: number] }>();
 </script>
-
-<style lang="scss" scoped>
-.reward {
-  width: 355px;
-  height: 78px;
-  margin-top: 5px;
-  border: 2px solid #7ff800;
-  border-radius: 10px;
-  overflow: hidden;
-
-  .reward-title {
-    width: 355px;
-    height: 15px;
-    background: #7ff800;
-    text-align: center;
-    line-height: 15px;
-    font-weight: 400;
-    font-size: 12px;
-    color: #214100;
-  }
-
-  .reward-list {
-    width: 355px;
-    height: 59px;
-    background: rgba(0, 0, 0, 0.5);
-    overflow-x: scroll;
-    overflow-y: hidden;
-
-    .boxs {
-      width: fit-content;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      overflow: visible;
-
-      .item {
-        flex-shrink: 0;
-        margin: 0 20px;
-        position: relative;
-        width: 40px;
-        height: 40px;
-        overflow: visible;
-
-        .light {
-          width: 100px;
-          height: 100px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .gift {
-          width: 40px;
-          height: 40px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .receive {
-          width: 32px;
-          height: 32px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-      }
-    }
-
-    .line {
-      margin-top: -5px;
-      height: 15px;
-
-      .dots {
-        width: fit-content;
-        display: flex;
-        align-items: center;
-        position: relative;
-
-        &::before {
-          content: '';
-          width: calc(100% - 65px);
-          height: 7px;
-          border-radius: 7px;
-          background: #000000;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        &::after {
-          content: '';
-          width: calc(var(--progress-value) * 80px + 7.5px - 80px);
-          height: 7px;
-          border-radius: 7px;
-          background: #fce403;
-          position: absolute;
-          top: 50%;
-          left: 32.5px;
-          transform: translateY(-50%);
-        }
-
-        .dot {
-          margin: 0 32.5px;
-          width: 15px;
-          height: 15px;
-          flex-shrink: 0;
-          border-radius: 15px;
-
-          font-weight: 400;
-          font-size: 12px;
-          text-align: center;
-          line-height: 15px;
-
-          position: relative;
-          z-index: 2;
-        }
-      }
-    }
-  }
-
-  .reward-list::-webkit-scrollbar {
-    height: 0 !important;
-    width: 0 !important;
-    background: transparent;
-    display: none;
-    /* Chrome, Safari 和 Opera */
+<style scoped>
+.milestones {
+  padding: 20px 22px;
+  border: 1px solid #79b58b66;
+  background: linear-gradient(130deg, #0a3d2eef, #03281feb);
+  box-shadow:
+    inset 0 1px 0 #a7e6ab18,
+    0 8px 30px #001b1850;
+  border-radius: 20px;
+}
+.reward-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reward-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 19px;
+  color: #f5edc8;
+}
+.reward-heading h2 img {
+  width: 28px;
+  height: 28px;
+}
+.reward-heading > span {
+  font-size: 13px;
+  color: #d5e69b;
+}
+.reward-caption {
+  font-size: 11px;
+  color: #98b9a3;
+  margin: 8px 0 13px;
+}
+.chests {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  position: relative;
+  gap: 4px;
+}
+.chests::before {
+  content: '';
+  position: absolute;
+  height: 3px;
+  left: 10%;
+  right: 10%;
+  top: 66px;
+  background: #547b54;
+}
+.chests button {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border: 0;
+  background: transparent;
+  color: #e6edcb;
+  gap: 7px;
+  padding: 0;
+  border-radius: 8px;
+  font-size: 12px;
+}
+.chests button:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.chests img {
+  width: 60px;
+  height: 60px;
+  max-width: 100%;
+  object-fit: contain;
+}
+.chests .available {
+  filter: drop-shadow(0 0 9px #eff67e99);
+  animation: glow 2s ease-in-out infinite;
+}
+.milestone-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #789e71;
+  border: 1px solid #b9ca8e;
+  z-index: 1;
+}
+.milestone-dot.reached {
+  background: #d5ef7a;
+  box-shadow: 0 0 8px #ddf37870;
+}
+.chests small {
+  font-size: 9px;
+  color: #93b498;
+}
+.chests button:enabled small {
+  color: #e2f795;
+}
+@keyframes glow {
+  50% {
+    transform: translateY(-3px);
   }
 }
-
-.giftList {
-  display: flex;
-  column-gap: 10px;
-
-  .giftItem {
-    text-align: center;
-
-    .giftWrap {
-      width: 50px;
-      height: 50px;
-      border-radius: 9px;
-      border: 2px solid #61c648;
-    }
-
-    .bgc6 {
-      background: linear-gradient(180deg, #54ac2b 0%, #1c430f 100%);
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    }
-
-    .bgc {
-      background: linear-gradient(180deg, #9d50bb 0%, #482a77 100%);
-      box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    }
+@media (max-width: 760px) {
+  .milestones {
+    padding: 12px 16px;
+    border-radius: 17px;
+  }
+  .reward-heading h2 {
+    font-size: 15px;
+  }
+  .reward-heading h2 img {
+    width: 22px;
+    height: 22px;
+  }
+  .reward-caption {
+    font-size: 9px;
+    margin: 3px 0 5px;
+  }
+  .chests img {
+    width: 45px;
+    height: 45px;
+  }
+  .chests::before {
+    top: 51px;
+  }
+  .chests button {
+    font-size: 10px;
+    gap: 5px;
+  }
+  .chests small {
+    font-size: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chests .available {
+    animation: none;
   }
 }
 </style>

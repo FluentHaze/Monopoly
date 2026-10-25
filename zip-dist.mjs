@@ -1,16 +1,15 @@
-// zip-dist.mjs
-import { zip } from 'zip-a-folder';
-import { rmSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
+import { zipSync } from 'fflate';
 
-// 删除旧的 zip（可选）
-try {
-  rmSync('./dist.zip');
-  console.log('已删除旧的 dist.zip');
-} catch { }
-
-const run = async () => {
-  await zip('./dist', './dist.zip');
-  console.log('✅ 成功打包 dist 为 dist.zip');
-};
-
-run();
+const files = {};
+function collect(directory) {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) collect(path);
+    else files[relative('dist', path).split('\\').join('/')] = readFileSync(path);
+  }
+}
+collect('dist');
+writeFileSync('dist.zip', zipSync(files));
+console.log('已生成 dist.zip');

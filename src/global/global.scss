@@ -3,28 +3,35 @@
   margin: 0;
   padding: 0;
 }
-
-html, body {
-  background: #111;
+:root {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'PingFang SC',
+    sans-serif;
+  color: #eef5e8;
+  background: #0c1710;
+  font-synthesis: none;
 }
-
 body {
-  font-family: -apple-system,
-  BlinkMacSystemFont,
-  'Helvetica Neue',
-  Helvetica,
-  Segoe UI,
-  Arial,
-  Roboto,
-  'PingFang SC',
-  'miui',
-  'Hiragino Sans GB',
-  'Microsoft Yahei',
-  sans-serif;
-
-  -webkit-user-select: none; /* Chrome all / Safari all */
-  -moz-user-select: none; /* Firefox all */
-  -ms-user-select: none; /* IE 10+ */
-  user-select: none; /* Likely future */
-  overscroll-behavior-y: none;
+  min-width: 320px;
+  margin: 0;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+button:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #c3ed83;
+  outline-offset: 4px;
+}
+button {
+  -webkit-tap-highlight-color: transparent;
 }

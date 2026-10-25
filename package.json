@@ -5,27 +5,33 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rimraf dist.zip && vue-tsc -b && vite build && node zip-dist.mjs",
-    "preview": "vite preview"
+    "build": "vue-tsc -b && vite build && node zip-dist.mjs",
+    "preview": "vite preview",
+    "test": "node --import tsx --test tests/game.test.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@esotericsoftware/spine-player": "^4.2.95",
     "pinia": "^3.0.4",
-    "postcss-pxtorem": "^6.1.0",
     "vant": "^4.9.21",
     "vue": "^3.5.17",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/node": "^24.0.4",
-    "@types/postcss-pxtorem": "^6.1.0",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
+    "fflate": "^0.8.3",
     "postcss": "^8.5.6",
     "sass-embedded": "^1.89.2",
+    "tsx": "^4.23.15",
     "typescript": "~5.8.3",
     "vite": "^7.0.0",
     "vue-tsc": "^2.2.10"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

@@ -1,5 +1,9 @@
 <template>
-  <Popup v-model:show="showModal" v-bind="attrs" style="--van-popup-background: transparent; max-width: 100vw">
+  <Popup
+    v-model:show="showModal"
+    v-bind="attrs"
+    style="--van-popup-background: transparent; max-width: 100vw"
+  >
     <slot></slot>
   </Popup>
 </template>
@@ -7,6 +11,7 @@
 <script setup lang="ts">
 import { useAttrs, ref, onMounted } from 'vue';
 import { Popup } from 'vant';
+import 'vant/lib/popup/style';
 
 const showModal = ref(false);
 

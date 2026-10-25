@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build archive
+dist.zip
+
+# Browser test outputs
+test-results/
+playwright-report/

@@ -10,7 +10,8 @@ const usePublicStore = defineStore('public', {
       this.dialogs.push(data);
     },
     deleteDialogs(data: any) {
-      this.dialogs.splice(this.dialogs.indexOf(data), 1);
+      const index = this.dialogs.indexOf(data);
+      if (index >= 0) this.dialogs.splice(index, 1);
     },
   },
 });
